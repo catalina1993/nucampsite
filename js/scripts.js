@@ -19,39 +19,34 @@ carouselButton.addEventListener("click", function () {
 });
 
 async function fetchWeather() {
-  const apiKey =
-    process.env.OPEN_WEATHER_API_KEY || "4038e5213d3e457bacb734cff0f75c65";
-  const city = "Virginia Beach";
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
-
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
+    const city = "London";
+    const apiKey = "2523010d2f26145cecb3bc11cf361681";
+    console.log(apiKey);
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+    let response = await fetch(url);
+    let data = await response.json();
     console.log(data);
     displayWeather(data);
   } catch (error) {
-    console.error("Error fetching weather data:", error);
+    console.error(`Error: ${error}`);
+  } finally {
+    console.log("After 10,000 years I'm free");
   }
 }
-
-fetchWeather();
-
-function displayWeather(data) {
-  const temperature = data.main.temp;
-  const description = data.weather[0].description;
-  const iconCode = data.weather[0].icon;
-
-  const weatherIcon = document.querySelector("#weather-icon");
-  const weatherTemp = document.querySelector("#weather-temp");
-  const weatherDescription = document.querySelector("#weather-description");
-
-  const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
-
-  weatherIcon.innerHTML = `<img src="${iconUrl}" alt="${description}" />`;
-  weatherTemp.textContent = `${temperature}\u00B0F`;
-  weatherDescription.textContent =
-    description.charAt(0).toUpperCase() + description.slice(1);
+function displayWeather(weatherData) {
+  const imageIcon = document.createElement("img");
+  //variable for weather condition
+  const icon = weatherData.weather[0].icon;
+  const unit = "\u00B0F"; //unicode escape sequence for degree symbol
+  console.log(`This is the icon ${icon}`);
+  //change src on imageIcon to url using the icon data for weather condition
+  imageIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+  imageIcon.classList.add("img-fluid", "custom-icon");
+  weatherIcon.appendChild(imageIcon);
+  //set value to temp unit + degree fahrenheit symbol
+  weatherTemp.textContent = weatherData.main.temp + unit;
+  console.log(weatherData.weather[0].description);
+  weatherDesc.textContent = weatherData.weather[0].description;
 }
+fetchWeather();
