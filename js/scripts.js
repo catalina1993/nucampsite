@@ -1,9 +1,17 @@
+//create dom elements
+let weatherIcon = document.querySelector("#weather-icon");
+let weatherTemp = document.querySelector("#weather-temp");
+let weatherDesc = document.querySelector("#weather-description");
+
+console.log("javascript connected!");
+
 const carousel = new bootstrap.Carousel("#homeCarousel", {
-  interval: 5000,
+  interval: 2750,
   pause: false,
 });
 
-const carouselButton = document.getElementById("carouselButton");
+// when the pause button is clicked, pause the carousel
+const carouselPause = document.getElementById("carouselPause");
 const faIcon = document.getElementById("faButton");
 
 carouselButton.addEventListener("click", function () {
@@ -22,6 +30,7 @@ async function fetchWeather() {
   try {
     const city = "London";
     const apiKey = "2523010d2f26145cecb3bc11cf361681";
+
     console.log(apiKey);
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
     let response = await fetch(url);
