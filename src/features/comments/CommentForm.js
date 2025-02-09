@@ -1,27 +1,32 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  FormGroup,
+  Label,
+} from "reactstrap";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { FormGroup, Label } from "reactstrap";
 import { validateCommentForm } from "../../utils/validateCommentForm";
-import { addComment } from "./commentsSlice";
+import { postComment } from "./commentsSlice"; // Import postComment instead of addComment
 
 const CommentForm = ({ campsiteId }) => {
   const [modalOpen, setModalOpen] = useState(false);
-
   const dispatch = useDispatch();
 
   const handleSubmit = (values) => {
-    const comment = {
-      id: Date.now(),
+    const newComment = {
       campsiteId: parseInt(campsiteId),
       rating: parseInt(values.rating),
       text: values.commentText,
       author: values.author,
-      date: new Date(Date.now()).toISOString(),
+      date: new Date().toISOString(),
     };
-    console.log("comment:", comment);
-    dispatch(addComment(comment));
+
+    console.log("Submitting Comment:", newComment);
+    dispatch(postComment(newComment)); // ✅ Dispatch postComment to persist to the server
     setModalOpen(false);
   };
 
@@ -44,12 +49,12 @@ const CommentForm = ({ campsiteId }) => {
               <FormGroup>
                 <Label htmlFor="rating">Rating</Label>
                 <Field name="rating" as="select" className="form-control">
-                  <option>Select...</option>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option value="">Select...</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
                 </Field>
                 <ErrorMessage
                   name="rating"
@@ -77,10 +82,11 @@ const CommentForm = ({ campsiteId }) => {
                 <Field
                   name="commentText"
                   as="textarea"
-                  rows="12"
+                  rows="6"
                   className="form-control"
                 />
               </FormGroup>
+
               <Button type="submit" color="primary">
                 Submit
               </Button>
